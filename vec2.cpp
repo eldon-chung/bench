@@ -11,28 +11,24 @@
 
 using result = std::pair<size_t, std::chrono::duration<double>>;
 
-auto create_and_insert(size_t start_size, size_t end_size, size_t step_size) {
-  std::vector<result> timing_list;
-  //   reserve so no reallocs happen
-  timing_list.reserve((end_size - start_size) / step_size + 1);
+auto create_and_insert(size_t total_size) {
 
   std::vector<int> to_test = {0};
   //   force it to start as small as possible
   to_test.shrink_to_fit();
-
   auto start = std::chrono::system_clock::now();
+
   for (size_t items = 0; items < end_size; items++) {
-    to_test.push_back(items);
+
+    auto end = std::chrono::system_clock::now();
     if (items >= start_size) {
-      auto end = std::chrono::system_clock::now();
       timing_list.push_back({items, end - start});
       start_size += step_size;
     }
   }
   auto end = std::chrono::system_clock::now();
-  timing_list.push_back({end_size, end - start});
 
-  return timing_list;
+  return end - start;
 }
 
 int main(int argc, char **argv) {
